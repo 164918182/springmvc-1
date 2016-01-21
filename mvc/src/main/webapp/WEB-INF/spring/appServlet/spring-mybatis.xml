@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd" >
+     
+    
+     <!-- 扫描包 -->
+         <!--  导入文件-->
+    <context:property-placeholder location="classpath:source.properties"></context:property-placeholder>
+	<context:component-scan base-package="com.wurenjie" />
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">	
+    	<property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+    	<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/test"></property>
+    	<property name="user" value="root"></property>
+    	<property name="password" value="wurenjie"></property>
+    
+    </bean>
+    <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"></property>
+    	<property name="mapperLocations" value="classpath*:com/wurenjie/mapper/*.xml"></property>
+    </bean>
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 --> 
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<property name="basePackage" value="com.wurenjie.dao.BookDao"/>
+    	<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+    </bean>
+   
+   
+    
+    </beans>
